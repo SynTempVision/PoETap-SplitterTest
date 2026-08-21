@@ -1,14 +1,6 @@
 # PoE Tap/Splitter Test
 
-Investigating and fixing camera network instability (`eth0` flapping) linked to the PoE
-splitter hardware, and building a repeatable qualification test for any new PoE splitter
-model before it goes into production.
-
-**Note on terminology:** "PoE Tap" and "PoE Splitter" are being used interchangeably here -
-both refer to the inline device that taps power off the PoE Ethernet cable and splits it
-into a separate DC power output for the camera. Worth confirming with whoever specs these
-parts if there's a meaningful distinction between the two terms for a given vendor/product
-line.
+"PoE Tap" and "PoE Splitter" are being used interchangeably here
 
 ## Goal
 
@@ -24,19 +16,10 @@ line.
   observe this - see the burn-in test plan below for capturing this properly alongside the
   kernel log going forward.
 - **Splitter swap result**: 2 cameras (cam 10 / `sv-159`, cam 24 / `sv-142`) had their PoE
-  splitters replaced and have **not** shown `eth0` flapping since:
+  splitters replaced and have **not** shown `eth0` Link UP / DOWN since. Also, they have not faulted in SynTempVision.
+  
   - **Before**: Anivision AVPS05, 5V 2.4A
   - **After**: Model HX-PD08SAT/G, 5V 3.5A
-  
-  This is real, positive evidence for the underpowered-splitter theory - matches the
-  existing leading theory from `PoESplitter/PoE_Splitter_CameraFlapping_Investigation.docx`
-  (2.4A splitter power/heat).
-- **Related prior finding**: the RamOS weekend reboot test (`RamOS/RebootLoopTest/
-  WEEKEND_TEST_FINDINGS.md`) found the same kind of simultaneous USB+network instability
-  across 4 independent units on the same bench, concluding the most likely cause was
-  something shared at the hardware/power level (power rail, PoE source) rather than four
-  independent camera failures - consistent with a splitter-power root cause rather than a
-  per-camera one.
 
 ## Tentative test plan (draft)
 
@@ -44,7 +27,7 @@ line.
 2. **Current draw check** - measure actual draw on the splitter using an NF-488 PoE
    checker.
 3. **Burn-in** - run the splitter for 1 hour, monitoring the Pi's kernel log for `eth0`
-   flap events during that window.
+   Link events during that window.
 4. **Wireshark capture during burn-in** - run a packet capture (`tcpdump`/Wireshark) on the
    camera itself for the duration of the burn-in, in parallel with the kernel log
    monitoring. Note: a physical link-down is a PHY-layer event (the interface just goes
@@ -63,8 +46,6 @@ production-approved, or accepting the shorter window as a first-pass screen only
 
 ## Next steps
 
-- [ ] Run the Wireshark/kernel-log capture together during the next burn-in and record the
-      actual signature/timestamps observed
+- [ ] Get feedback from Tim 
 - [ ] Decide the real burn-in duration
-- [ ] Confirm Tap vs Splitter terminology with whoever specs these parts
 - [ ] Build the actual test script/process once the above is settled
