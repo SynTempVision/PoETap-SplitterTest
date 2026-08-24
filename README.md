@@ -27,12 +27,14 @@
    traffic. Still useful: gives an independent, precise timestamp source to cross-check
    against the kernel log's `Link is Down`/`Link is Up` lines, and shows exactly what
    traffic was happening on the wire right before the drop.
-5. iperf:
+5. iperf: run iperf after 1 hr of burn in to compare pre-stress to post-stress. 
 
 ## Pass/Fail Criteria 
 - Voltage: ouput must stay abouve 5V continuously under a load ( camera or equivalent load on the PoE tester
-- Network link event: it is typically to see one in the boot up process but a cluster over time is considered a fail
-- 
+- Network link event: it is typically to see one in the boot up process but a cluster ( more than 2 consecutive events) over time is considered a fail
+
+## Instruments
+
 
 
 ### Open question: is a 1-hour burn-in long enough?
