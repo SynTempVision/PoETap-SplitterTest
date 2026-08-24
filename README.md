@@ -9,19 +9,11 @@
 3. Build a test process every new PoE splitter model has to pass before it's approved for
    production installation.
 
-## Evidence so far
-
-- **Symptom**: the Pi's kernel log shows the `eth0` link repeatedly going down/up
-  (`bcmgenet ... eth0: Link is Down` / `Link is Up`). Wireshark has also been used to
-  observe this - see the burn-in test plan below for capturing this properly alongside the
-  kernel log going forward.
-- **Splitter swap result**: 2 cameras (cam 10 / `sv-159`, cam 24 / `sv-142`) had their PoE
-  splitters replaced and have **not** shown `eth0` Link UP / DOWN since. Also, they have not faulted in SynTempVision.
   
   - **Before**: Anivision AVPS05, 5V 2.4A
   - **After**: Model HX-PD08SAT/G, 5V 3.5A
 
-## Tentative test plan (draft)
+## Tentative test plan
 
 1. **Load test** - check whether output voltage drops below 5V under load.
 2. **Current draw check** - measure actual draw on the splitter using an NF-488 PoE
@@ -35,6 +27,13 @@
    traffic. Still useful: gives an independent, precise timestamp source to cross-check
    against the kernel log's `Link is Down`/`Link is Up` lines, and shows exactly what
    traffic was happening on the wire right before the drop.
+5. iperf:
+
+## Pass/Fail Criteria 
+- Voltage: ouput must stay abouve 5V continuously under a load ( camera or equivalent load on the PoE tester
+- Network link event: it is typically to see one in the boot up process but a cluster over time is considered a fail
+- 
+
 
 ### Open question: is a 1-hour burn-in long enough?
 
@@ -46,6 +45,6 @@ production-approved, or accepting the shorter window as a first-pass screen only
 
 ## Next steps
 
-- [ ] Get feedback from Tim 
-- [ ] Decide the real burn-in duration
-- [ ] Build the actual test script/process once the above is settled
+- Get feedback from Tim 
+- Decide the real burn-in duration
+- Build the actual test script/process once the above is settled
